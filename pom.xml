@@ -7,11 +7,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.9.RELEASE</version>
+        <version>2.2.9.RELEASE</version>
     </parent>
 
     <modules>
         <module>shepherd-server</module>
+        <module>repository</module>
     </modules>
 
     <groupId>guru.bootstrap</groupId>
@@ -20,7 +21,8 @@
     <packaging>pom</packaging>
 
     <properties>
-
+        <curator.version>5.1.0</curator.version>
+        <mysql.version>8.0.21</mysql.version>
     </properties>
 
     <dependencyManagement>
