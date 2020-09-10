@@ -1,52 +1,66 @@
 package guru.bootstrap.shepherd.controller;
 
-import com.alibaba.fastjson.JSON;
+import guru.bootstrap.cookie.DoCookie;
+import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.curator.CuratorConnection;
 import guru.bootstrap.shepherd.jpa.UserRepository;
 import guru.bootstrap.shepherd.mapper.UserMapper;
 import guru.bootstrap.shepherd.po.UserPO;
-import org.apache.zookeeper.data.ACL;
-import org.springframework.beans.factory.annotation.Autowired;
+import guru.bootstrap.shepherd.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author tangcheng
  */
 @Controller
 @RequestMapping("/c")
-public class IndexController {
+public class IndexController extends BaseController {
 
     private CuratorConnection curatorConnection;
+
+    private final UserService userService;
 
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
 
-    public IndexController(UserMapper userMapper, UserRepository userRepository) {
+    private final EncryptComponent encryptComponent;
+
+    public IndexController(UserMapper userMapper, UserRepository userRepository,
+                           UserService userService, EncryptComponent encryptComponent) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.userService = userService;
+        this.encryptComponent = encryptComponent;
     }
 
     @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public Object testHandler() throws Exception {
+    public Object testHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        DoCookie cookie = new DoCookie(request, response);
+        System.out.println("qw: => " + cookie.getCookieRawValue("_sa"));
         UserPO userPO = userMapper.selectOneById(1L);
-        UserPO userPO1 = userRepository.getOne(1L);
-        System.out.println(
-                JSON.toJSONString(userPO1, true)
-        );
-        System.out.println();
-        List<ACL> acls = new ArrayList<>();
-        return this.curatorConnection.getCurator()
-                .getChildren()
-                .forPath("/");
+        String eid = request.getParameter("eid");
+        cookie.addCookie("_sa", encryptComponent.encode(999999999999999999L), 1000);
+        Long s = encryptComponent.decode(eid);
+        return s;
+//        return encryptComponent.decode(eid);
+//        UserPO userPO1 = userRepository.getOne(1L);
+//        System.out.println(
+//                JSON.toJSONString(userPO1, true)
+//        );
+//        System.out.println();
+//        List<ACL> acls = new ArrayList<>();
+//        return this.curatorConnection.getCurator()
+//                .getChildren()
+//                .forPath("/");
 //        return curatorConnection.getCurator().getState();
     }
 

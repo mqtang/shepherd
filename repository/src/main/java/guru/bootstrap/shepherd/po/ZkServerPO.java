@@ -11,14 +11,14 @@ public class ZkServerPO {
     private String zkName;
     private String zkShowName;
     private String connString;
-    private Byte stickTop;
     private String hexColor;
     private String description;
 
+    private Byte stickTopFlag;
+    private Date stickTopTime;
+    private Integer orderIndex;
     private Date createTime;
     private Date updateTime;
-
-
 
 }
 // 2020/9/4 13:40

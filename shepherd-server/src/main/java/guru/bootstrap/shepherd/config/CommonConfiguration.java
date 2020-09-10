@@ -1,7 +1,6 @@
-package guru.bootstrap.shepherd.configuration;
+package guru.bootstrap.shepherd.config;
 
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
@@ -10,7 +9,10 @@ import org.springframework.context.annotation.ImportResource;
  */
 @Configuration
 @MapperScan(basePackages = "guru.bootstrap.shepherd.mapper")
-public class ScanRepositoryConfig {
-
+@ImportResource(locations = {"classpath:spring-mvc.xml",
+        "classpath:spring-component.xml"
+})
+public class CommonConfiguration {
+    
 }
 // 2020/9/6 10:40

@@ -13,6 +13,7 @@
     <modules>
         <module>shepherd-server</module>
         <module>repository</module>
+        <module>service-layer</module>
     </modules>
 
     <groupId>guru.bootstrap</groupId>
@@ -23,10 +24,29 @@
     <properties>
         <curator.version>5.1.0</curator.version>
         <mysql.version>8.0.21</mysql.version>
+        <gcache.version>1.0.1</gcache.version>
+        <gcookie.version>1.0.1</gcookie.version>
+        <gencrypt.version>1.0.1</gencrypt.version>
     </properties>
 
     <dependencyManagement>
-
+        <dependencies>
+            <dependency>
+                <groupId>guru.bootstrap</groupId>
+                <artifactId>cache-guru</artifactId>
+                <version>${gcache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>guru.bootstrap</groupId>
+                <artifactId>cookie-guru</artifactId>
+                <version>${gcookie.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>guru.bootstrap</groupId>
+                <artifactId>encryption-guru</artifactId>
+                <version>${gencrypt.version}</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
     <repositories>
@@ -35,25 +55,5 @@
             <url>https://nexus.bootstrap.guru/content/groups/public/</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>ten-cent</id>
-            <url>https://nexus.bootstrap.guru/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ten-cent</id>
-            <url>https://nexus.bootstrap.guru/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

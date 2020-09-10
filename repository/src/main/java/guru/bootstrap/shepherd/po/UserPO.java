@@ -1,6 +1,7 @@
 package guru.bootstrap.shepherd.po;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author tangcheng
@@ -15,6 +16,9 @@ public class UserPO {
     private String nickName;
     private String cellPhone;
     private String email;
+
+    private Date createTime;
+    private Date updateTime;
 
     public Long getUserId() {
         return userId;
