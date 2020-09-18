@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
+    <!-- http://www.logback.cn/ -->
+    <!-- http://logback.qos.ch/ -->
+
     <!-- org.springframework.boot.logging.logback.SpringPropertyAction -->
     <springProperty scope="context" name="app_name" source="spring.application.name" defaultValue="springboot"/>
 
