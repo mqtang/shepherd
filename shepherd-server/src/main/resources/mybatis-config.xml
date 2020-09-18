@@ -6,5 +6,7 @@
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
-
+    <typeAliases>
+        <package name="guru.bootstrap.shepherd.po"/>
+    </typeAliases>
 </configuration>

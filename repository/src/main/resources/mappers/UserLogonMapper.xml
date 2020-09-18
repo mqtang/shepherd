@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/dtd/mybatis-3-mapper.dtd"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="guru.bootstrap.shepherd.mapper.CoreUserLogonMapper">
+    <insert id="insertUserCoreLogon" parameterType="coreUserLogonPO" useGeneratedKeys="true" keyColumn="rec_id"
+            keyProperty="recId">
+        insert into core_user_logon_info (user_id, auth_type, auth_identity, auth_key, is_verified, last_logon_ip,
+                                          last_logon_time)
+        values (#{userId, jdbcType=BIGINT}, #{authType, jdbcType=TINYINT}, #{authIdentity, jdbcType=VARCHAR},
+                #{authKey, jdbcType=VARCHAR}, #{verified, jdbcType=TINYINT},
+                inet_aton(#{lastLogonIp, jdbcType=INTEGER}), #{lastLogonTime, jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="countByAuthTypeAndId" parameterType="coreUserLogonPO" resultType="int">
+        select count(1)
+        from core_user_logon_info
+        where auth_type = #{authType, jdbcType=TINYINT}
+          and auth_identity = #{authIdentity, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByAuthTypeAndId" parameterType="coreUserLogonPO" resultType="coreUserLogonPO">
+        select user_id, auth_type, auth_identity, auth_key, inet_ntoa(last_logon_ip) as last_logon_ip, last_logon_time
+        from core_user_logon_info
+        where auth_type = #{authType, jdbcType=TINYINT}
+          and auth_identity = #{authIdentity, jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

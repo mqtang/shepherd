@@ -8,15 +8,21 @@
 
     <context:property-placeholder file-encoding="UTF-8" location="jasypt.properties"/>
 
+    <!-- id加解密 -->
     <bean id="jasyptProperties" class="guru.bootstrap.encrypt.jasypt.JasyptProperties">
         <property name="algorithm" value="${jasypt.algorithm}"/>
         <property name="password" value="${jasypt.password}"/>
         <property name="poolSize" value="${jasypt.poolSize}"/>
         <property name="stringOutputType" value="${jasypt.stringOutputType}"/>
     </bean>
-
     <bean class="guru.bootstrap.encrypt.jasypt.EncryptJasyptComponentImpl">
         <constructor-arg ref="jasyptProperties"/>
+    </bean>
+
+    <!-- 密码加解密 -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <bean class="guru.bootstrap.encrypt.bcrypt.PasswordEncryptorImpl">
+        <constructor-arg ref="passwordEncoder"/>
     </bean>
 
 </beans>

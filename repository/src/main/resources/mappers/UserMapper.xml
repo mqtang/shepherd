@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/dtd/mybatis-3-mapper.dtd"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="guru.bootstrap.shepherd.mapper.UserMapper">
-    <select id="selectOneById" resultType="guru.bootstrap.shepherd.po.UserPO">
-        select user_id , username from core_user_info where user_id = #{userId}
-    </select>
+<mapper namespace="guru.bootstrap.shepherd.mapper.CoreUserMapper">
+    <insert id="insertUserCore" parameterType="coreUserPo" useGeneratedKeys="true" keyColumn="user_id"
+            keyProperty="userId">
+        insert into core_user_info (nickname, member_id, email, cellphone,
+                                    register_ip, register_type)
+        values (#{nickname, jdbcType=VARCHAR}, #{memberId, jdbcType=VARCHAR},
+                #{email, jdbcType=VARCHAR}, #{cellphone, jdbcType=VARCHAR},
+                inet_aton(#{registerIp, jdbcType=INTEGER}), #{registerType, jdbcType=TINYINT})
+    </insert>
+
 </mapper>

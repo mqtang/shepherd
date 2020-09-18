@@ -1,11 +1,9 @@
 package guru.bootstrap.shepherd.controller;
 
-import guru.bootstrap.cookie.DoCookie;
 import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.curator.CuratorConnection;
-import guru.bootstrap.shepherd.jpa.UserRepository;
-import guru.bootstrap.shepherd.mapper.UserMapper;
-import guru.bootstrap.shepherd.po.UserPO;
+import guru.bootstrap.shepherd.mapper.CoreUserMapper;
+import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,16 +25,13 @@ public class IndexController extends BaseController {
 
     private final UserService userService;
 
-    private final UserMapper userMapper;
-
-    private final UserRepository userRepository;
+    private final CoreUserMapper coreUserMapper;
 
     private final EncryptComponent encryptComponent;
 
-    public IndexController(UserMapper userMapper, UserRepository userRepository,
+    public IndexController(CoreUserMapper coreUserMapper,
                            UserService userService, EncryptComponent encryptComponent) {
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
+        this.coreUserMapper = coreUserMapper;
         this.userService = userService;
         this.encryptComponent = encryptComponent;
     }
@@ -44,19 +39,11 @@ public class IndexController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Object testHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        DoCookie cookie = new DoCookie(request, response);
-        System.out.println("qw: => " + cookie.getCookieRawValue("_sa"));
-        UserPO userPO = userMapper.selectOneById(1L);
-        String eid = request.getParameter("eid");
-        cookie.addCookie("_sa", encryptComponent.encode(999999999999999999L), 1000);
-        Long s = encryptComponent.decode(eid);
-        return s;
-//        return encryptComponent.decode(eid);
-//        UserPO userPO1 = userRepository.getOne(1L);
-//        System.out.println(
-//                JSON.toJSONString(userPO1, true)
-//        );
-//        System.out.println();
+        CoreUserPO coreUserPO = new CoreUserPO();
+        coreUserPO.setNickname("黑色");
+        coreUserPO.setRegisterIp("103.206.188.43");
+        coreUserMapper.insertUserCore(coreUserPO);
+        return encryptComponent.encode(coreUserPO.getUserId());
 //        List<ACL> acls = new ArrayList<>();
 //        return this.curatorConnection.getCurator()
 //                .getChildren()

@@ -26,7 +26,7 @@
         <mysql.version>8.0.21</mysql.version>
         <gcache.version>1.0.1</gcache.version>
         <gcookie.version>1.0.1</gcookie.version>
-        <gencrypt.version>1.0.1</gencrypt.version>
+        <gencrypt.version>1.0.2</gencrypt.version>
     </properties>
 
     <dependencyManagement>

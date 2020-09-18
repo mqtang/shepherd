@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <!-- org.springframework.boot.logging.logback.SpringPropertyAction -->
+    <springProperty scope="context" name="app_name" source="spring.application.name" defaultValue="springboot"/>
+
+    <!-- properties -->
+    <property name="LOG_PATH" value="/app/${app_name}/logs"/>
+    <property name="LOG_FILE" value="${LOG_PATH}/${app_name}.log"/>
+    <property name="LOG_FILE_CLEAN_HISTORY_ON_START" value="false"/>
+    <property name="ROLLING_FILE_NAME_PATTERN" value="${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}"/>
+    <property name="LOG_FILE_MAX_SIZE" value="10MB"/>
+    <property name="LOG_FILE_MAX_HISTORY" value="7"/>
+    <property name="LOG_LEVEL_PATTERN" value="USER:%X{_user:-nobody} %3p"/>
+
+    <!-- includes -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="logback-appender.xml"/>
+
+    <!-- loggers -->
+    <logger name="guru.bootstrap.shepherd.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL_APPENDER"/>
+    </logger>
+
+    <!-- root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

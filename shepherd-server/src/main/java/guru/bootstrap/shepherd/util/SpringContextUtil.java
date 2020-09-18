@@ -1,5 +1,6 @@
 package guru.bootstrap.shepherd.util;
 
+import guru.bootstrap.shepherd.auth.BaseCommand;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -10,12 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author tangcheng
  */
-public abstract class SpringContainerUtil {
-    private SpringContainerUtil() {
+public abstract class SpringContextUtil {
+    private SpringContextUtil() {
     }
 
     public static <T> T getBean(Class<T> clazz) {
         return getWebApplicationContext().getBean(clazz);
+    }
+
+    public static BaseCommand getBaseCommand() {
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert requestAttributes != null;
+        HttpServletRequest request = requestAttributes.getRequest();
+        return (BaseCommand) request.getAttribute(AppConstant.BASE_COMMAND_ATTR);
     }
 
     public static WebApplicationContext getWebApplicationContext() {

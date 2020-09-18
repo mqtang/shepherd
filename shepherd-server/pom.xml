@@ -23,6 +23,11 @@
             <version>1.9.3</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.3.4.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>guru.bootstrap</groupId>
             <artifactId>cache-guru</artifactId>
         </dependency>
