@@ -1,4 +1,4 @@
-# core_user_info
+-- core_user_info
 create table if not exists core_user_info
 (
     user_id         bigint unsigned  not null auto_increment comment '主键标识',
@@ -31,7 +31,7 @@ create table if not exists core_user_info
   auto_increment = 1000
   default character set = utf8mb4 comment '用户基础信息表';
 
-# core_user_logon_info
+-- core_user_logon_info
 create table if not exists core_user_logon_info
 (
     rec_id          bigint unsigned  not null auto_increment comment '自增主键',

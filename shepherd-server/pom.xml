@@ -87,8 +87,29 @@
 
     <profiles>
         <profile>
-            <id>prod</id>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <mysql>127.0.0.1</mysql>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <outputDir>/app</outputDir>
+                <mysql>119.45.12.226</mysql>
+            </properties>
             <build>
+                <filters>
+                </filters>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
                 <plugins>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
