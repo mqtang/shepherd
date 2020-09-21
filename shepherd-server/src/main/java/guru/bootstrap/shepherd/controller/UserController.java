@@ -35,7 +35,6 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/reg", method = RequestMethod.POST)
     public Object regHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
-
         UserServiceDTO userServiceDTO = new UserServiceDTO();
         userServiceDTO.setUsername(userCommandDTO.getUsername());
         String encryptPassword = passwordEncryptor.encode(userCommandDTO.getPassword());
@@ -51,7 +50,6 @@ public class UserController extends BaseController {
         }
         DoCookie cookie = new DoCookie(request, response);
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userPO.getUserId()), AppConstant.ONE_DAY_SECONDS);
-        cookie.addCookie(AppConstant.COOKIE_LAST_VISIT_TIME, encryptComponent.encode(System.currentTimeMillis()), AppConstant.ONE_YEAR_SECONDS);
         return HttpRestEntity
                 .newResult(userPO.getMemberId())
                 .withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
@@ -60,11 +58,6 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Object loginHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
-        logger.warn("RequestURL: " + request.getRequestURL());
-        logger.warn("RequestURI:" + request.getRequestURI());
-        logger.warn("RemoteAddr:" + request.getRemoteAddr());
-        logger.warn("RemoteHost:" + request.getRemoteHost());
-        logger.warn("RemotePort" + request.getRemotePort());
         UserServiceDTO userServiceDTO = new UserServiceDTO();
         userServiceDTO.setUsername(userCommandDTO.getUsername());
         userServiceDTO.setRegisterType(userCommandDTO.getRegisterTypeKey());
@@ -74,7 +67,6 @@ public class UserController extends BaseController {
         if (isMatch) {
             DoCookie cookie = new DoCookie(request, response);
             cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()), AppConstant.ONE_DAY_SECONDS);
-            cookie.addCookie(AppConstant.COOKIE_LAST_VISIT_TIME, encryptComponent.encode(System.currentTimeMillis()), AppConstant.ONE_YEAR_SECONDS);
             restEntity = HttpRestEntity.newResult(userServiceDTO.getUsername()).withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
         } else {
             restEntity = HttpRestEntity.newResult("").withStatus(ResultStatus.newStatus(ResultStatusEnum.NEED_LOGIN));

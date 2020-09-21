@@ -37,6 +37,7 @@ public class AuthCommandFilter extends OncePerRequestFilter {
         command.setUserId(userId);
         request.setAttribute(AppConstant.BASE_COMMAND_ATTR, command);
         filterChain.doFilter(request, response);
+        cookie.addCookie(AppConstant.COOKIE_LAST_VISIT_TIME, encryptComponent.encode(System.currentTimeMillis()), AppConstant.ONE_YEAR_SECONDS);
     }
 }
 // 2020/9/17 17:11
