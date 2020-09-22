@@ -92,27 +92,23 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <mysql>127.0.0.1</mysql>
             </properties>
             <build>
-
+                <filters>
+                    <filter>src/main/mf/dev.properties</filter>
+                </filters>
             </build>
         </profile>
         <profile>
             <id>production</id>
             <properties>
+                <!-- define default web jar output location -->
                 <outputDir>/app</outputDir>
-                <mysql>119.45.12.226</mysql>
             </properties>
             <build>
                 <filters>
+                    <filter>src/main/mf/prod.properties</filter>
                 </filters>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <filtering>true</filtering>
-                    </resource>
-                </resources>
                 <plugins>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
