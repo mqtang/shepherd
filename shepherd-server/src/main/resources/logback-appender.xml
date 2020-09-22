@@ -13,7 +13,7 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${${SQL_LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <fileNamePattern>${SQL_LOG_FILE}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <maxFileSize>${LOG_FILE_MAX_SIZE}</maxFileSize>
             <maxHistory>${LOG_FILE_MAX_HISTORY}</maxHistory>
             <totalSizeCap>${LOG_FILE_TOTAL_SIZE_CAP:-0}</totalSizeCap>
