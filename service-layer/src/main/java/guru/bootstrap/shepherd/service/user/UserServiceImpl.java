@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         synchronized (regLock) {
             int count = logonMapper.countByAuthTypeAndId(logonPO);
             if (count != 0) {
-                throw new UserException("用户名已存在");
+                throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS.getDescEn());
             }
             coreUserMapper.insertUserCore(userPO);
             logonPO.setUserId(userPO.getUserId());
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         logonPO.setAuthIdentity(registerDTO.getUsername());
         int count = logonMapper.countByAuthTypeAndId(logonPO);
         if (count != 0) {
-            throw new UserException("用户名已存在");
+            throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS.getDescEn());
         }
     }
 

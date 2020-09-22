@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author tangcheng
@@ -29,15 +30,23 @@ public class AuthCommandFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        DoCookie cookie = new DoCookie(request, response);
-        String lgn = cookie.getCookieRawValue(AppConstant.COOKIE_USER_ID);
-        MDC.put("_user", lgn);
-        Long userId = encryptComponent.decode(lgn);
-        BaseCommand command = new BaseCommand();
-        command.setUserId(userId);
-        request.setAttribute(AppConstant.BASE_COMMAND_ATTR, command);
+        DoCookie doCookie = new DoCookie(request, response);
+        BaseCommand baseCommand = new BaseCommand();
+        buildBaseCommandInfo(doCookie, baseCommand);
+        MDC.put("_user", baseCommand.getUserId() != null ? baseCommand.getUserId() + "" : null);
+        request.setAttribute(AppConstant.BASE_COMMAND_ATTR, baseCommand);
+        doCookie.addCookie(AppConstant.COOKIE_LAST_VISIT_TIME, encryptComponent.encode(System.currentTimeMillis()), AppConstant.ONE_YEAR_SECONDS);
         filterChain.doFilter(request, response);
-        cookie.addCookie(AppConstant.COOKIE_LAST_VISIT_TIME, encryptComponent.encode(System.currentTimeMillis()), AppConstant.ONE_YEAR_SECONDS);
     }
+
+    private void buildBaseCommandInfo(DoCookie doCookie, BaseCommand baseCommand) {
+        String lgn = doCookie.getCookieRawValue(AppConstant.COOKIE_USER_ID);
+        Long userId = encryptComponent.decode(lgn);
+        baseCommand.setUserId(userId);
+        String lvt = doCookie.getCookieRawValue(AppConstant.COOKIE_LAST_VISIT_TIME);
+        Long lvTime = encryptComponent.decode(lvt);
+        baseCommand.setLvt(lvTime != null ? new Date(lvTime) : new Date());
+    }
+
 }
 // 2020/9/17 17:11

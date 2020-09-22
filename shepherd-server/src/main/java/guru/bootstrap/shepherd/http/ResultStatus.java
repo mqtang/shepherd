@@ -1,5 +1,7 @@
 package guru.bootstrap.shepherd.http;
 
+import guru.bootstrap.shepherd.service.user.UserStatusEnum;
+
 import java.util.Date;
 
 /**
@@ -12,6 +14,10 @@ public class ResultStatus {
 
     public static ResultStatus newStatus(ResultStatusEnum statusEnum) {
         return new ResultStatus(statusEnum.getCode() + "", statusEnum.getDesc());
+    }
+
+    public static ResultStatus newStatus(UserStatusEnum statusEnum) {
+        return new ResultStatus(statusEnum.getCodeWithPrefix() + "", statusEnum.getDesc());
     }
 
     public ResultStatus() {

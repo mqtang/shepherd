@@ -1,13 +1,16 @@
-package guru.bootstrap.shepherd.http;
+package guru.bootstrap.shepherd.service.user;
 
-public enum ResultStatusEnum {
-    OK(0, "成功", "ok"), NEED_LOGIN(99999, "未登录", "need to login");
+public enum UserStatusEnum {
+    OK(0, "注册成功", "reg success"),
+    MEMBER_ID_EXISTS(2000, "用户名已存在", "member id already exists");
+
+    private static final String PREFIX = "U";
 
     private int code;
     private String desc;
     private String descEn;
 
-    ResultStatusEnum(int code, String desc, String descEn) {
+    UserStatusEnum(int code, String desc, String descEn) {
         this.code = code;
         this.desc = desc;
         this.descEn = descEn;
@@ -18,7 +21,7 @@ public enum ResultStatusEnum {
     }
 
     public String getCodeWithPrefix() {
-        return "" + code;
+        return PREFIX + code;
     }
 
     public String getDesc() {

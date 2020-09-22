@@ -8,10 +8,10 @@ import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import guru.bootstrap.shepherd.service.exception.UserException;
 import guru.bootstrap.shepherd.service.user.UserServiceDTO;
+import guru.bootstrap.shepherd.service.user.UserStatusEnum;
 import guru.bootstrap.shepherd.util.AppConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +29,11 @@ public class UserController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/reg", method = RequestMethod.POST)
@@ -45,11 +48,16 @@ public class UserController extends BaseController {
         try {
             userPO = userService.register(userServiceDTO);
         } catch (UserException e) {
-            e.printStackTrace();
-            return e.getMessage();
+            logger.warn("regHandler ::error", e);
+            return HttpRestEntity
+                    .newResult("")
+                    .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_ID_EXISTS));
         }
         DoCookie cookie = new DoCookie(request, response);
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userPO.getUserId()), AppConstant.ONE_DAY_SECONDS);
+        if (logger.isInfoEnabled()) {
+            logger.info("visitor [{}] has registered, user id is {}.", userServiceDTO.getUsername(), userPO.getUserId());
+        }
         return HttpRestEntity
                 .newResult(userPO.getMemberId())
                 .withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
@@ -66,10 +74,13 @@ public class UserController extends BaseController {
         HttpRestEntity<?> restEntity;
         if (isMatch) {
             DoCookie cookie = new DoCookie(request, response);
-            cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()), AppConstant.ONE_DAY_SECONDS);
-            restEntity = HttpRestEntity.newResult(userServiceDTO.getUsername()).withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
+            cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()),
+                    AppConstant.ONE_DAY_SECONDS);
+            restEntity = HttpRestEntity.newResult(userServiceDTO.getUsername())
+                    .withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
         } else {
-            restEntity = HttpRestEntity.newResult("").withStatus(ResultStatus.newStatus(ResultStatusEnum.NEED_LOGIN));
+            restEntity = HttpRestEntity.newResult("")
+                    .withStatus(ResultStatus.newStatus(ResultStatusEnum.NEED_LOGIN));
         }
         return restEntity;
     }
