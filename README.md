@@ -21,7 +21,6 @@ https://maven.apache.org/guides/getting-started/index.html#how-do-i-filter-resou
 > mvn package -Pproduction -Dmysql=119.45.12.226
 > java -jar shepherd-server.jar -Dspring.profiles.active=production
 
-
 **1.properties**
 
 在SpringBoot中的application.properties文件中，访问pom的profile变量 `@..@` 而不是 `${..}`。
@@ -78,5 +77,43 @@ profile 中的properties可以在命令行中进行覆盖, 命令行中的参数
             </build>
         </profile>
     </profiles>
+```
+
+### **Spring  Session**
+
+[Redis Operation Reference](https://docs.spring.io/spring-session/docs/2.2.3.RELEASE/reference/html5/#api-redisindexedsessionrepository)
+
+> Config class 
+> org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration
+>
+
+### 关于 ConfigureRedisAction.NO_OP
+https://docs.spring.io/spring-session/docs/2.2.3.RELEASE/reference/html5/#api-redisindexedsessionrepository-sessiondestroyedevent
+
+
+
+## Spring Session
+
+**1.Spring Session** 
+
+因为redis key的失效策略 [Redis Expires](https://redis.io/commands/expire#appendix-redis-expires), 所以Spring session在redis中新建了一个key, 使用定时任务来主动去将session数据触发redis的删除。
+
+**2.Redis Pub/Sub**
+
+spring session 也使用了 redis的订阅策略, 当session失效时, 应用程序会获得一个事件, 可用来清理资源等等.
+
+```shell
+HMSET spring:session:sessions:33fdd1b6-b496-4b33-9f7d-df96679d32fe \
+    creationTime 1404360000000 \
+	maxInactiveInterval 1800 \
+	lastAccessedTime 1404360000000 \
+	sessionAttr:name "tang" \
+	sessionAttr:age 25
+EXPIRE spring:session:sessions:33fdd1b6-b496-4b33-9f7d-df96679d32fe 2100
+APPEND spring:session:sessions:expires:33fdd1b6-b496-4b33-9f7d-df96679d32fe ""
+EXPIRE spring:session:sessions:expires:33fdd1b6-b496-4b33-9f7d-df96679d32fe 1800
+SADD spring:session:expirations:1439245080000 \
+	expires:33fdd1b6-b496-4b33-9f7d-df96679d32fe
+EXPIRE spring:session:expirations1439245080000 2100
 ```
 

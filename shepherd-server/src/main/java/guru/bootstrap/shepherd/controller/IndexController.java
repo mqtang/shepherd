@@ -25,13 +25,14 @@ public class IndexController extends BaseController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Object testHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
-        session.setAttribute("ni", 12);
+        session.setAttribute("name", "tang_cheng");
+        session.setAttribute("age", 25);
         return new Date();
     }
 
     @ResponseBody
     @RequestMapping(value = "/close", method = RequestMethod.GET)
-    public Object closeHandler() {
+    public Object closeHandler(HttpServletRequest request) {
         this.curatorConnection.getCurator().close();
         return Integer.MIN_VALUE;
     }

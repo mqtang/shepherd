@@ -94,6 +94,9 @@
             <properties>
                 <mysql>127.0.0.1</mysql>
             </properties>
+            <build>
+
+            </build>
         </profile>
         <profile>
             <id>production</id>
