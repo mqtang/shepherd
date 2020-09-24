@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -27,7 +28,7 @@ public class IndexController extends BaseController {
         HttpSession session = request.getSession();
         session.setAttribute("name", "tang_cheng");
         session.setAttribute("age", 25);
-        return new Date();
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:sss").format(new Date());
     }
 
     @ResponseBody
