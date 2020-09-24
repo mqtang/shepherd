@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
+import java.util.Date;
 
 /**
  * @author tangcheng
@@ -42,8 +44,8 @@ public class UserController extends BaseController {
         userServiceDTO.setUsername(userCommandDTO.getUsername());
         String encryptPassword = passwordEncryptor.encode(userCommandDTO.getPassword());
         userServiceDTO.setPassword(encryptPassword);
-        userServiceDTO.setRegisterIp(request.getRemoteAddr());
-        userServiceDTO.setRegisterType(userCommandDTO.getRegisterTypeKey());
+        userServiceDTO.setAuthIp(request.getRemoteAddr());
+        userServiceDTO.setAuthType(userCommandDTO.getRegisterTypeKey());
         CoreUserPO userPO;
         try {
             userPO = userService.register(userServiceDTO);
@@ -68,7 +70,10 @@ public class UserController extends BaseController {
     public Object loginHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
         UserServiceDTO userServiceDTO = new UserServiceDTO();
         userServiceDTO.setUsername(userCommandDTO.getUsername());
-        userServiceDTO.setRegisterType(userCommandDTO.getRegisterTypeKey());
+        userServiceDTO.setAuthType(userCommandDTO.getRegisterTypeKey());
+        userServiceDTO.setLogonIp(request.getRemoteAddr());
+        userServiceDTO.setUserAgent(request.getHeader("user-agent"));
+        userServiceDTO.setLogonTime(new Date());
         userServiceDTO = userService.login(userServiceDTO);
         boolean isMatch = passwordEncryptor.matches(userCommandDTO.getPassword(), userServiceDTO.getPassword());
         HttpRestEntity<?> restEntity;
