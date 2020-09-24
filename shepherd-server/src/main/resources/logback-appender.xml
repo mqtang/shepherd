@@ -6,7 +6,7 @@
 
 <included>
 
-    <property name="SQL_LOG_FILE" value="${LOG_PATH}/sql.log"/>
+    <property name="SQL_LOG_FILE" value="${LOG_PATH}/sql/sql.log"/>
     <appender name="SQL_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${SQL_LOG_FILE}</file>
         <encoder charset="UTF-8">
