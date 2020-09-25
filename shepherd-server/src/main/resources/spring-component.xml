@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder file-encoding="UTF-8" location="jasypt.properties"/>
+    <context:property-placeholder file-encoding="UTF-8" location="props/jasypt.properties"/>
 
     <!-- id加解密 -->
     <bean id="jasyptProperties" class="guru.bootstrap.encrypt.jasypt.JasyptProperties">
