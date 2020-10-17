@@ -9,6 +9,7 @@
 
 应用级别的code为数字;
 业务级别的为`FP0123`,格式为:`{业务缩写}{编号}`
+创建java对象时, 不在业务代码中创建, 放到helper类或者即将创建的类中.
 
 mvn process used in springboot
 [howto-properties-and-configuration](

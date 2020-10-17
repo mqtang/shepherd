@@ -65,10 +65,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserServiceDTO login(UserServiceDTO serviceDTO) {
+    public UserServiceDTO login(UserServiceDTO serviceDTO) throws UserException {
         CoreUserLogonPO logonPO
                 = new CoreUserLogonPO(serviceDTO.getAuthType(), serviceDTO.getUsername());
         logonPO = userLogonMapper.selectByAuthTypeAndId(logonPO);
+        if (logonPO == null) {
+            throw new UserException(UserStatusEnum.MEMBER_NOT_EXISTS.getDescEn());
+        }
         serviceDTO.setUserId(logonPO.getUserId());
         serviceDTO.setPassword(logonPO.getAuthKey());
         serviceDTO.setLastLogonIp(logonPO.getLastLogonIp());

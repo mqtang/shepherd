@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.Instant;
-import java.util.Date;
 
 /**
  * @author tangcheng
@@ -38,21 +36,15 @@ public class UserController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/reg", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Object regHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
-        UserServiceDTO userServiceDTO = new UserServiceDTO();
-        userServiceDTO.setUsername(userCommandDTO.getUsername());
-        String encryptPassword = passwordEncryptor.encode(userCommandDTO.getPassword());
-        userServiceDTO.setPassword(encryptPassword);
-        userServiceDTO.setAuthIp(request.getRemoteAddr());
-        userServiceDTO.setAuthType(userCommandDTO.getRegisterTypeKey());
+        UserServiceDTO userServiceDTO = userCommandDTO.buildRegUserServiceDTO(request);
         CoreUserPO userPO;
         try {
             userPO = userService.register(userServiceDTO);
         } catch (UserException e) {
             logger.warn("regHandler ::error", e);
-            return HttpRestEntity
-                    .newResult("")
+            return HttpRestEntity.newResult("")
                     .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_ID_EXISTS));
         }
         DoCookie cookie = new DoCookie(request, response);
@@ -60,23 +52,23 @@ public class UserController extends BaseController {
         if (logger.isInfoEnabled()) {
             logger.info("visitor [{}] has registered, user id is {}.", userServiceDTO.getUsername(), userPO.getUserId());
         }
-        return HttpRestEntity
-                .newResult(userPO.getMemberId())
+        return HttpRestEntity.newResult(userPO.getMemberId())
                 .withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
     }
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Object loginHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
-        UserServiceDTO userServiceDTO = new UserServiceDTO();
-        userServiceDTO.setUsername(userCommandDTO.getUsername());
-        userServiceDTO.setAuthType(userCommandDTO.getRegisterTypeKey());
-        userServiceDTO.setLogonIp(request.getRemoteAddr());
-        userServiceDTO.setUserAgent(request.getHeader("user-agent"));
-        userServiceDTO.setLogonTime(new Date());
-        userServiceDTO = userService.login(userServiceDTO);
-        boolean isMatch = passwordEncryptor.matches(userCommandDTO.getPassword(), userServiceDTO.getPassword());
+        UserServiceDTO userServiceDTO = userCommandDTO.buildLoginUserServiceDTO(request);
         HttpRestEntity<?> restEntity;
+        try {
+            userServiceDTO = userService.login(userServiceDTO);
+        } catch (UserException e) {
+            logger.warn("loginHandler ::error", e);
+            return HttpRestEntity.newResult(userCommandDTO.getUsername())
+                    .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_NOT_EXISTS));
+        }
+        boolean isMatch = passwordEncryptor.matches(userCommandDTO.getPassword(), userServiceDTO.getPassword());
         if (isMatch) {
             DoCookie cookie = new DoCookie(request, response);
             cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()),

@@ -9,6 +9,6 @@ public interface UserService {
 
     void checkRegister(UserServiceDTO serviceDTO) throws UserException;
 
-    UserServiceDTO login(UserServiceDTO serviceDTO);
+    UserServiceDTO login(UserServiceDTO serviceDTO) throws UserException;
 
 }

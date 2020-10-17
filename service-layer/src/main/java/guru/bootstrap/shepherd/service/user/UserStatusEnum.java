@@ -1,7 +1,8 @@
 package guru.bootstrap.shepherd.service.user;
 
 public enum UserStatusEnum {
-    OK(0, "注册成功", "reg success"),
+    OK(0, "注册成功", "reg success."),
+    MEMBER_NOT_EXISTS(1999, "用户不存在", "can not find the specified user."),
     MEMBER_ID_EXISTS(2000, "用户名已存在", "member id already exists");
 
     private static final String PREFIX = "U";
