@@ -7,6 +7,7 @@ import guru.bootstrap.shepherd.http.ResultStatusEnum;
 import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import guru.bootstrap.shepherd.service.exception.UserException;
+import guru.bootstrap.shepherd.service.exception.UserNotExistException;
 import guru.bootstrap.shepherd.service.user.UserServiceDTO;
 import guru.bootstrap.shepherd.service.user.UserStatusEnum;
 import guru.bootstrap.shepherd.util.AppConstant;
@@ -44,7 +45,7 @@ public class UserController extends BaseController {
             userPO = userService.register(userServiceDTO);
         } catch (UserException e) {
             logger.warn("regHandler ::error", e);
-            return HttpRestEntity.newResult("")
+            return HttpRestEntity.newEmptyResult()
                     .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_ID_EXISTS));
         }
         DoCookie cookie = new DoCookie(request, response);
@@ -65,8 +66,12 @@ public class UserController extends BaseController {
             userServiceDTO = userService.login(userServiceDTO);
         } catch (UserException e) {
             logger.warn("loginHandler ::error", e);
-            return HttpRestEntity.newResult(userCommandDTO.getUsername())
-                    .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_NOT_EXISTS));
+            if (e instanceof UserNotExistException) {
+                return HttpRestEntity.newResult(userCommandDTO.getUsername())
+                        .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_NOT_EXISTS));
+            }
+            return HttpRestEntity.newEmptyResult()
+                    .withStatus(ResultStatus.newStatus(ResultStatusEnum.UNKNOWN_ERROR));
         }
         boolean isMatch = passwordEncryptor.matches(userCommandDTO.getPassword(), userServiceDTO.getPassword());
         if (isMatch) {
@@ -76,7 +81,7 @@ public class UserController extends BaseController {
             restEntity = HttpRestEntity.newResult(userServiceDTO.getUsername())
                     .withStatus(ResultStatus.newStatus(ResultStatusEnum.OK));
         } else {
-            restEntity = HttpRestEntity.newResult("")
+            restEntity = HttpRestEntity.newEmptyResult()
                     .withStatus(ResultStatus.newStatus(ResultStatusEnum.NEED_LOGIN));
         }
         return restEntity;

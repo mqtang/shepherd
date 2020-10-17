@@ -8,6 +8,7 @@ import guru.bootstrap.shepherd.po.CoreUserLogonPO;
 import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import guru.bootstrap.shepherd.service.exception.UserException;
+import guru.bootstrap.shepherd.service.exception.UserNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
                 = new CoreUserLogonPO(serviceDTO.getAuthType(), serviceDTO.getUsername());
         logonPO = userLogonMapper.selectByAuthTypeAndId(logonPO);
         if (logonPO == null) {
-            throw new UserException(UserStatusEnum.MEMBER_NOT_EXISTS.getDescEn());
+            throw new UserNotExistException(UserStatusEnum.MEMBER_NOT_EXISTS.getDescEn());
         }
         serviceDTO.setUserId(logonPO.getUserId());
         serviceDTO.setPassword(logonPO.getAuthKey());

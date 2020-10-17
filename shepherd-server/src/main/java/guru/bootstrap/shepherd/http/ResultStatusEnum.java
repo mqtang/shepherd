@@ -1,7 +1,9 @@
 package guru.bootstrap.shepherd.http;
 
 public enum ResultStatusEnum {
-    OK(0, "成功", "ok"), NEED_LOGIN(99999, "未登录", "need to login");
+    OK(0, "成功", "ok"),
+    UNKNOWN_ERROR(50505, "服务正忙, 请稍后再试", "try again later"),
+    NEED_LOGIN(99999, "未登录", "need to login");
 
     private int code;
     private String desc;
