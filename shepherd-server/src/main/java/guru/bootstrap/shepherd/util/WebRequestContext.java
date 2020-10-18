@@ -19,5 +19,11 @@ public abstract class WebRequestContext {
         assert requestAttributes != null;
         return requestAttributes.getRequest();
     }
+
+    public static boolean isLanguageEn() {
+        return AppConstant.LANGUAGE_PARAM_EN
+                .equalsIgnoreCase(httpServletRequest().getParameter(AppConstant.LANGUAGE_PARAM_NAME));
+    }
+
 }
 // 2020/9/29 17:12

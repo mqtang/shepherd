@@ -1,6 +1,7 @@
 package guru.bootstrap.shepherd.http;
 
 import guru.bootstrap.shepherd.service.user.UserStatusEnum;
+import guru.bootstrap.shepherd.util.WebRequestContext;
 
 import java.util.Date;
 
@@ -13,11 +14,13 @@ public class ResultStatus {
     private Date time = new Date();
 
     public static ResultStatus newStatus(ResultStatusEnum statusEnum) {
-        return new ResultStatus(statusEnum.getCode() + "", statusEnum.getDesc());
+        return new ResultStatus(statusEnum.getCode() + "",
+                isEnRequest() ? statusEnum.getDescEn() : statusEnum.getDesc());
     }
 
     public static ResultStatus newStatus(UserStatusEnum statusEnum) {
-        return new ResultStatus(statusEnum.getCodeWithPrefix() + "", statusEnum.getDesc());
+        return new ResultStatus(statusEnum.getCodeWithPrefix() + "",
+                isEnRequest() ? statusEnum.getDescEn() : statusEnum.getDesc());
     }
 
     public ResultStatus() {
@@ -51,5 +54,10 @@ public class ResultStatus {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    private static boolean isEnRequest() {
+        return WebRequestContext.isLanguageEn();
+    }
+
 }
 // 2020/9/16 20:00
