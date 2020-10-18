@@ -14,6 +14,7 @@
         <module>shepherd-server</module>
         <module>repository</module>
         <module>service-layer</module>
+        <module>shepherd-api</module>
     </modules>
 
     <groupId>guru.bootstrap</groupId>
@@ -27,6 +28,7 @@
         <gcache.version>1.0.1</gcache.version>
         <gcookie.version>1.0.1</gcookie.version>
         <gencrypt.version>1.0.2</gencrypt.version>
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencyManagement>
