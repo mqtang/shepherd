@@ -1,5 +1,6 @@
 package guru.bootstrap.shepherd.service.user;
 
+import guru.bootstrap.encrypt.PasswordEncryptor;
 import guru.bootstrap.shepherd.mapper.CoreLogonHistoryMapper;
 import guru.bootstrap.shepherd.mapper.CoreUserLogonMapper;
 import guru.bootstrap.shepherd.mapper.CoreUserMapper;
@@ -8,7 +9,6 @@ import guru.bootstrap.shepherd.po.CoreUserLogonPO;
 import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import guru.bootstrap.shepherd.service.exception.UserException;
-import guru.bootstrap.shepherd.service.exception.UserNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private CoreUserLogonMapper userLogonMapper;
     @Autowired
     private CoreLogonHistoryMapper logonHistoryMapper;
+    @Autowired
+    private PasswordEncryptor passwordEncryptor;
 
     private final Object regLock = new Object();
 
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
         synchronized (regLock) {
             int count = userLogonMapper.countByAuthTypeAndId(logonPO);
             if (count != 0) {
-                throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS.getDescEn());
+                throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS);
             }
             coreUserMapper.insertUserCore(userPO);
             logonPO.setUserId(userPO.getUserId());
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
         logonPO.setAuthIdentity(registerDTO.getUsername());
         int count = userLogonMapper.countByAuthTypeAndId(logonPO);
         if (count != 0) {
-            throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS.getDescEn());
+            throw new UserException(UserStatusEnum.MEMBER_ID_EXISTS);
         }
     }
 
@@ -71,7 +73,11 @@ public class UserServiceImpl implements UserService {
                 = new CoreUserLogonPO(serviceDTO.getAuthType(), serviceDTO.getUsername());
         logonPO = userLogonMapper.selectByAuthTypeAndId(logonPO);
         if (logonPO == null) {
-            throw new UserNotExistException(UserStatusEnum.MEMBER_NOT_EXISTS.getDescEn());
+            throw new UserException(UserStatusEnum.MEMBER_NOT_EXISTS);
+        }
+        boolean isMatch = passwordEncryptor.matches(serviceDTO.getPassword(), logonPO.getAuthKey());
+        if (!isMatch) {
+            throw new UserException(UserStatusEnum.LON_IN_ERROR);
         }
         serviceDTO.setUserId(logonPO.getUserId());
         serviceDTO.setPassword(logonPO.getAuthKey());

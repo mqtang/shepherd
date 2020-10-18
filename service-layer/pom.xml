@@ -43,6 +43,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>guru.bootstrap</groupId>
+            <artifactId>encryption-guru</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

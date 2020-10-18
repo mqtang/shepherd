@@ -30,6 +30,7 @@ public class UserCommandDTO {
         UserServiceDTO userServiceDTO = new UserServiceDTO();
         userServiceDTO.setUsername(this.getUsername());
         userServiceDTO.setAuthType(this.getRegisterTypeKey());
+        userServiceDTO.setPassword(this.getPassword());
         userServiceDTO.setLogonIp(request.getRemoteAddr());
         userServiceDTO.setUserAgent(request.getHeader("user-agent"));
         userServiceDTO.setLogonTime(new Date());

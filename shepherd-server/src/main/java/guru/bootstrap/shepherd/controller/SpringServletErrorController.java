@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,10 +32,10 @@ public class SpringServletErrorController extends AbstractErrorController {
     @ResponseBody
     @RequestMapping
     public Object handle(HttpServletRequest request, HttpServletResponse response) {
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
         Map<String, Object> map = getErrorAttributes(request, true);
+        request.setAttribute("spring_servlet_error", map);
         logger.warn(System.lineSeparator() + map.toString());
-        return "Something unexpected happens";
+        return "something unexpected happened, please try again later";
     }
 
     @Override
