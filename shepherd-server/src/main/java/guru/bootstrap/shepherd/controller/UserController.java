@@ -1,13 +1,10 @@
 package guru.bootstrap.shepherd.controller;
 
 import guru.bootstrap.cookie.DoCookie;
-import guru.bootstrap.shepherd.http.HttpRestEntity;
-import guru.bootstrap.shepherd.http.ResultStatus;
 import guru.bootstrap.shepherd.po.CoreUserPO;
 import guru.bootstrap.shepherd.service.UserService;
 import guru.bootstrap.shepherd.service.exception.UserException;
 import guru.bootstrap.shepherd.service.user.UserServiceDTO;
-import guru.bootstrap.shepherd.service.user.UserStatusEnum;
 import guru.bootstrap.shepherd.util.AppConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,16 +33,10 @@ public class UserController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Object regHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) {
+    public Object regHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response)
+            throws UserException {
         UserServiceDTO userServiceDTO = userCommandDTO.buildRegUserServiceDTO(request);
-        CoreUserPO userPO;
-        try {
-            userPO = userService.register(userServiceDTO);
-        } catch (UserException e) {
-            logger.warn("regHandler ::error", e);
-            return HttpRestEntity.newEmptyResult()
-                    .withStatus(ResultStatus.newStatus(UserStatusEnum.MEMBER_ID_EXISTS));
-        }
+        CoreUserPO userPO = userService.register(userServiceDTO);
         DoCookie cookie = new DoCookie(request, response);
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userPO.getUserId()), AppConstant.ONE_DAY_SECONDS);
         if (logger.isInfoEnabled()) {
@@ -56,7 +47,8 @@ public class UserController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Object loginHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response) throws UserException {
+    public Object loginHandler(UserCommandDTO userCommandDTO, HttpServletRequest request, HttpServletResponse response)
+            throws UserException {
         UserServiceDTO userServiceDTO = userCommandDTO.buildLoginUserServiceDTO(request);
         userServiceDTO = userService.login(userServiceDTO);
         DoCookie cookie = new DoCookie(request, response);

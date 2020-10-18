@@ -1,5 +1,6 @@
 package guru.bootstrap.shepherd.controller;
 
+import guru.bootstrap.cookie.DoCookie;
 import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.encrypt.PasswordEncryptor;
 import guru.bootstrap.shepherd.auth.BaseCommand;
@@ -9,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author tangcheng
@@ -23,6 +25,15 @@ public abstract class BaseController {
 
     protected BaseCommand getBaseCommand() {
         return SpringContextUtil.getBaseCommand();
+    }
+
+    protected DoCookie buildDoCookie() {
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert requestAttributes != null;
+        HttpServletRequest request = requestAttributes.getRequest();
+        HttpServletResponse response = requestAttributes.getResponse();
+        return new DoCookie(request, response);
     }
 
     protected HttpServletRequest currentRequest() {
