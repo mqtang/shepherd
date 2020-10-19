@@ -1,4 +1,4 @@
-package guru.bootstrap.shepherd.config;
+package guru.bootstrap.shepherd.boot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

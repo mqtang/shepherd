@@ -1,4 +1,4 @@
-package guru.bootstrap.shepherd.controller;
+package guru.bootstrap.shepherd.boot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

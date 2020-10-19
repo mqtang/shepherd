@@ -1,4 +1,4 @@
-package guru.bootstrap.shepherd.controller;
+package guru.bootstrap.shepherd.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.bootstrap.shepherd.http.ResultStatus;
