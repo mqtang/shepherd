@@ -4,6 +4,7 @@ import guru.bootstrap.cookie.DoCookie;
 import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.auth.BaseCommand;
 import guru.bootstrap.shepherd.util.AppConstant;
+import guru.bootstrap.shepherd.util.WebRequestContext;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -45,7 +46,9 @@ public class AuthCommandFilter extends OncePerRequestFilter {
         baseCommand.setUserId(userId);
         String lvt = doCookie.getCookieRawValue(AppConstant.COOKIE_LAST_VISIT_TIME);
         Long lvTime = encryptComponent.decode(lvt);
-        baseCommand.setLvt(lvTime != null ? new Date(lvTime) : new Date());
+        baseCommand.set_lvt(lvTime != null ? new Date(lvTime) : new Date());
+        baseCommand.set_version(WebRequestContext.apiVersion());
+        baseCommand.set_lan(WebRequestContext.language());
     }
 
 }

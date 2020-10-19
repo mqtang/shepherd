@@ -8,7 +8,10 @@ import java.util.Date;
 public class BaseCommand {
     private Long userId;
     private String username;
-    private Date lvt;
+
+    private Date _lvt;
+    private String _lan;
+    private int _version;
 
     public Long getUserId() {
         return userId;
@@ -26,12 +29,28 @@ public class BaseCommand {
         this.username = username;
     }
 
-    public Date getLvt() {
-        return lvt;
+    public Date get_lvt() {
+        return _lvt;
     }
 
-    public void setLvt(Date lvt) {
-        this.lvt = lvt;
+    public void set_lvt(Date _lvt) {
+        this._lvt = _lvt;
+    }
+
+    public int get_version() {
+        return _version;
+    }
+
+    public void set_version(int _version) {
+        this._version = _version;
+    }
+
+    public String get_lan() {
+        return _lan;
+    }
+
+    public void set_lan(String _lan) {
+        this._lan = _lan;
     }
 
     public boolean isLogin() {

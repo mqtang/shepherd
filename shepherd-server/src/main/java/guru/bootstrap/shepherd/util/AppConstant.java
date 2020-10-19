@@ -17,8 +17,12 @@ public abstract class AppConstant {
 
     public static final String BASE_COMMAND_ATTR = "_app_baseCommand";
 
-    public static final String LANGUAGE_PARAM_NAME = "lan";
+    public static final String LANGUAGE_PARAM_NAME = "_lan";
     public static final String LANGUAGE_PARAM_EN = "en";
+    public static final String LANGUAGE_PARAM_CN = "cn";
+
+    public static final String API_VERSION_PARAM_NAME = "_version";
+    public static final int DEFAULT_API_VERSION = 0;
 
     public static final String SPRING_SERVLET_ERROR_ATTR = "spring_servlet_error";
 
