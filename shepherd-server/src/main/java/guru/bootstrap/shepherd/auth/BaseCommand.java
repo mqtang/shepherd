@@ -9,6 +9,7 @@ public class BaseCommand {
     private Long userId;
     private String username;
 
+    private String loginStatusToken;
     private Date _lvt;
     private String _lan;
     private int _version;
@@ -27,6 +28,14 @@ public class BaseCommand {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getLoginStatusToken() {
+        return loginStatusToken;
+    }
+
+    public void setLoginStatusToken(String loginStatusToken) {
+        this.loginStatusToken = loginStatusToken;
     }
 
     public Date get_lvt() {

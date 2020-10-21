@@ -1,5 +1,6 @@
 package guru.bootstrap.shepherd.controller;
 
+import guru.bootstrap.shepherd.annotation.LoginValidator;
 import guru.bootstrap.shepherd.curator.CuratorConnection;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ public class IndexController extends BaseController {
         return new SimpleDateFormat("yyyy-MM-dd hh:mm:sss").format(new Date());
     }
 
+    @LoginValidator
     @ResponseBody
     @RequestMapping(value = "/close", method = RequestMethod.GET)
     public Object closeHandler(HttpServletRequest request) {

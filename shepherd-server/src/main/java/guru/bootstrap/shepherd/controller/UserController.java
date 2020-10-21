@@ -8,6 +8,7 @@ import guru.bootstrap.shepherd.service.user.UserServiceDTO;
 import guru.bootstrap.shepherd.util.AppConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author tangcheng
@@ -26,9 +28,11 @@ public class UserController extends BaseController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final StringRedisTemplate redisTemplate;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, StringRedisTemplate redisTemplate) {
         this.userService = userService;
+        this.redisTemplate = redisTemplate;
     }
 
     @ResponseBody
@@ -54,6 +58,10 @@ public class UserController extends BaseController {
         DoCookie cookie = new DoCookie(request, response);
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()),
                 AppConstant.ONE_DAY_SECONDS);
+        HttpSession session = request.getSession();
+        Long currentTimeMillis = System.currentTimeMillis();
+        session.setAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR, currentTimeMillis);
+        redisTemplate.boundValueOps(AppConstant.REDIS_LOGIN_STATUS_TOKEN_PREFIX + userServiceDTO.getUserId()).set(currentTimeMillis + "");
         return userServiceDTO.getUsername();
     }
 

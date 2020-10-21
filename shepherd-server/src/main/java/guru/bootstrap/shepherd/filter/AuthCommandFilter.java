@@ -5,7 +5,10 @@ import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.auth.BaseCommand;
 import guru.bootstrap.shepherd.util.AppConstant;
 import guru.bootstrap.shepherd.util.WebRequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,10 +25,14 @@ import java.util.Date;
 @Component
 public class AuthCommandFilter extends OncePerRequestFilter {
 
-    private final EncryptComponent encryptComponent;
+    private static final Logger logger = LoggerFactory.getLogger(AuthCommandFilter.class);
 
-    public AuthCommandFilter(EncryptComponent encryptComponent) {
+    private final EncryptComponent encryptComponent;
+    private final StringRedisTemplate redisTemplate;
+
+    public AuthCommandFilter(EncryptComponent encryptComponent, StringRedisTemplate redisTemplate) {
         this.encryptComponent = encryptComponent;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -46,6 +53,9 @@ public class AuthCommandFilter extends OncePerRequestFilter {
         baseCommand.setUserId(userId);
         String lvt = doCookie.getCookieRawValue(AppConstant.COOKIE_LAST_VISIT_TIME);
         Long lvTime = encryptComponent.decode(lvt);
+        String token = AppConstant.REDIS_LOGIN_STATUS_TOKEN_PREFIX + userId;
+        String loginStatusToken = redisTemplate.boundValueOps(token).get();
+        baseCommand.setLoginStatusToken(loginStatusToken);
         baseCommand.set_lvt(lvTime != null ? new Date(lvTime) : new Date());
         baseCommand.set_version(WebRequestContext.apiVersion());
         baseCommand.set_lan(WebRequestContext.language());

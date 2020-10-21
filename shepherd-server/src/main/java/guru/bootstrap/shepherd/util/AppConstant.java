@@ -8,7 +8,7 @@ public abstract class AppConstant {
     private AppConstant() {
     }
 
-    public static final String COOKIE_USER_ID = "_uid";
+    public static final String COOKIE_USER_ID = "_pid";
     public static final String COOKIE_USER_NAME = "_lgn";
     public static final String COOKIE_LAST_VISIT_TIME = "_lvt";
 
@@ -25,6 +25,9 @@ public abstract class AppConstant {
     public static final int DEFAULT_API_VERSION = 0;
 
     public static final String SPRING_SERVLET_ERROR_ATTR = "spring_servlet_error";
+
+    public static final String REDIS_LOGIN_STATUS_TOKEN_PREFIX = "shepherd:users:login:status_";
+    public static final String LOGIN_STATUS_SESSION_ATTR = "login_status_";
 
 }
 // 2020/9/16 20:30

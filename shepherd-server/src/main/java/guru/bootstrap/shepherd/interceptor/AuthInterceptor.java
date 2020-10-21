@@ -6,16 +6,19 @@ import guru.bootstrap.shepherd.auth.BaseCommand;
 import guru.bootstrap.shepherd.http.HttpRestEntity;
 import guru.bootstrap.shepherd.http.ResultStatus;
 import guru.bootstrap.shepherd.http.ResultStatusEnum;
+import guru.bootstrap.shepherd.util.AppConstant;
 import guru.bootstrap.shepherd.util.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author tangcheng
@@ -38,7 +41,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
         BaseCommand command = SpringContextUtil.getBaseCommand();
         LoginValidator loginValidator = handlerMethod.getMethod().getAnnotation(LoginValidator.class);
-        if (loginValidator != null && !command.isLogin()) {
+        if (loginValidator != null
+                && (!command.isLogin() || !validateLoginStatusToken(command, request))) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(buildHttpResponse()));
             response.getWriter().flush();
@@ -47,9 +52,15 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
+    private boolean validateLoginStatusToken(BaseCommand command, HttpServletRequest request) {
+        String token = command.getLoginStatusToken();
+        HttpSession session = request.getSession();
+        String statusToken = (String) session.getAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR);
+        return token.equalsIgnoreCase(statusToken);
+    }
+
     private HttpRestEntity<?> buildHttpResponse() {
-        return HttpRestEntity
-                .newResult("")
+        return HttpRestEntity.newResult("")
                 .withStatus(ResultStatus.newStatus(ResultStatusEnum.NEED_LOGIN));
     }
 }
