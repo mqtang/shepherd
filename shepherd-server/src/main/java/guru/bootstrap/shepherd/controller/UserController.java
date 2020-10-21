@@ -59,9 +59,9 @@ public class UserController extends BaseController {
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()),
                 AppConstant.ONE_DAY_SECONDS);
         HttpSession session = request.getSession();
-        Long currentTimeMillis = System.currentTimeMillis();
-        session.setAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR, currentTimeMillis);
-        redisTemplate.boundValueOps(AppConstant.REDIS_LOGIN_STATUS_TOKEN_PREFIX + userServiceDTO.getUserId()).set(currentTimeMillis + "");
+        String strToken = System.currentTimeMillis() + "";
+        session.setAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR, strToken);
+        redisTemplate.boundValueOps(AppConstant.REDIS_LOGIN_STATUS_TOKEN_PREFIX + userServiceDTO.getUserId()).set(strToken);
         return userServiceDTO.getUsername();
     }
 
