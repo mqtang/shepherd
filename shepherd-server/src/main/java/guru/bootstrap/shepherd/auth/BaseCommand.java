@@ -1,11 +1,27 @@
 package guru.bootstrap.shepherd.auth;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
  * @author tangcheng
  */
 public class BaseCommand {
+
+    private HttpServletRequest request;
+    private HttpServletResponse response;
+
+    public BaseCommand() {
+    }
+
+    public BaseCommand(HttpServletRequest request, HttpServletResponse response) {
+        assert request != null;
+        assert response != null;
+        this.request = request;
+        this.response = response;
+    }
+
     private Long userId;
     private String username;
 
@@ -14,6 +30,14 @@ public class BaseCommand {
     private Date _lvt;
     private String _lan;
     private int _version;
+
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
+    }
 
     public Long getUserId() {
         return userId;

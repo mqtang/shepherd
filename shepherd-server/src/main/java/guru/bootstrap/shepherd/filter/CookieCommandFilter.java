@@ -3,7 +3,6 @@ package guru.bootstrap.shepherd.filter;
 import guru.bootstrap.cookie.DoCookie;
 import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.auth.BaseCommand;
-import guru.bootstrap.shepherd.auth.CookieValues;
 import guru.bootstrap.shepherd.util.AppConstant;
 import guru.bootstrap.shepherd.util.WebRequestContext;
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ public class CookieCommandFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         DoCookie doCookie = new DoCookie(request, response);
-        BaseCommand baseCommand = new BaseCommand();
+        BaseCommand baseCommand = new BaseCommand(request, response);
         buildBaseCommandInfo(doCookie, baseCommand);
         MDC.put("_user", baseCommand.getUserId() != null ? baseCommand.getUserId() + "" : null);
         request.setAttribute(AppConstant.BASE_COMMAND_ATTR, baseCommand);

@@ -10,7 +10,11 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LoginValidator {
+public @interface LoginAccess {
+
+    boolean strict() default true;
+
+    boolean csrf() default true;
 
 }
 // 2020/9/16 20:42
