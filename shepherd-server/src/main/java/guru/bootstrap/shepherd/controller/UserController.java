@@ -58,6 +58,7 @@ public class UserController extends BaseController {
         DoCookie cookie = new DoCookie(request, response);
         cookie.addCookie(AppConstant.COOKIE_USER_ID, encryptComponent.encode(userServiceDTO.getUserId()),
                 AppConstant.ONE_DAY_SECONDS);
+        cookie.addCookie(AppConstant.COOKIE_CSRF, "_test_csrf", -1);
         HttpSession session = request.getSession();
         String strToken = System.currentTimeMillis() + "";
         session.setAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR, strToken);

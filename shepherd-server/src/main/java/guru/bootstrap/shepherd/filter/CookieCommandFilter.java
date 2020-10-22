@@ -3,6 +3,7 @@ package guru.bootstrap.shepherd.filter;
 import guru.bootstrap.cookie.DoCookie;
 import guru.bootstrap.encrypt.EncryptComponent;
 import guru.bootstrap.shepherd.auth.BaseCommand;
+import guru.bootstrap.shepherd.auth.CookieValues;
 import guru.bootstrap.shepherd.util.AppConstant;
 import guru.bootstrap.shepherd.util.WebRequestContext;
 import org.slf4j.Logger;
@@ -23,14 +24,14 @@ import java.util.Date;
  * @author tangcheng
  */
 @Component
-public class AuthCommandFilter extends OncePerRequestFilter {
+public class CookieCommandFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthCommandFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CookieCommandFilter.class);
 
     private final EncryptComponent encryptComponent;
     private final StringRedisTemplate redisTemplate;
 
-    public AuthCommandFilter(EncryptComponent encryptComponent, StringRedisTemplate redisTemplate) {
+    public CookieCommandFilter(EncryptComponent encryptComponent, StringRedisTemplate redisTemplate) {
         this.encryptComponent = encryptComponent;
         this.redisTemplate = redisTemplate;
     }
@@ -56,6 +57,7 @@ public class AuthCommandFilter extends OncePerRequestFilter {
         String token = AppConstant.REDIS_LOGIN_STATUS_TOKEN_PREFIX + userId;
         String loginStatusToken = redisTemplate.boundValueOps(token).get();
         baseCommand.setLoginStatusToken(loginStatusToken);
+        baseCommand.set_csrf_token(doCookie.getCookieRawValue(AppConstant.COOKIE_CSRF));
         baseCommand.set_lvt(lvTime != null ? new Date(lvTime) : new Date());
         baseCommand.set_version(WebRequestContext.apiVersion());
         baseCommand.set_lan(WebRequestContext.language());

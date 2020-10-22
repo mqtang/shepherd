@@ -10,6 +10,7 @@ public class BaseCommand {
     private String username;
 
     private String loginStatusToken;
+    private String _csrf_token;
     private Date _lvt;
     private String _lan;
     private int _version;
@@ -38,6 +39,14 @@ public class BaseCommand {
         this.loginStatusToken = loginStatusToken;
     }
 
+    public String get_csrf_token() {
+        return _csrf_token;
+    }
+
+    public void set_csrf_token(String _csrf_token) {
+        this._csrf_token = _csrf_token;
+    }
+
     public Date get_lvt() {
         return _lvt;
     }
@@ -64,6 +73,10 @@ public class BaseCommand {
 
     public boolean isLogin() {
         return this.userId != null;
+    }
+
+    public boolean isNotLogin() {
+        return !isLogin();
     }
 
 }

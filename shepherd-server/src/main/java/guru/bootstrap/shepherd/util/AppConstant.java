@@ -11,6 +11,9 @@ public abstract class AppConstant {
     public static final String COOKIE_USER_ID = "_pid";
     public static final String COOKIE_USER_NAME = "_lgn";
     public static final String COOKIE_LAST_VISIT_TIME = "_lvt";
+    public static final String COOKIE_CSRF = "_csrf_token";
+
+    public static final String X_CSRF_TOKEN_HEADER = "X-Csrf-Token";
 
     public static final Integer ONE_DAY_SECONDS = 24 * 60 * 60;
     public static final Integer ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;

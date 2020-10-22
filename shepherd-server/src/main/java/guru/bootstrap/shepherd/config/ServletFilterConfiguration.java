@@ -1,6 +1,6 @@
 package guru.bootstrap.shepherd.config;
 
-import guru.bootstrap.shepherd.filter.AuthCommandFilter;
+import guru.bootstrap.shepherd.filter.CookieCommandFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +18,9 @@ public class ServletFilterConfiguration {
     private static final String MATCH_ALL_PATH_PATTERN = "/*";
 
     @Bean
-    public FilterRegistrationBean<AuthCommandFilter> registerAuthCommandFilter(AuthCommandFilter authCommandFilter) {
-        FilterRegistrationBean<AuthCommandFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(authCommandFilter);
+    public FilterRegistrationBean<CookieCommandFilter> registerAuthCommandFilter(CookieCommandFilter cookieCommandFilter) {
+        FilterRegistrationBean<CookieCommandFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(cookieCommandFilter);
         registrationBean.setUrlPatterns(Collections.singleton(MATCH_ALL_PATH_PATTERN));
         registrationBean.setName("authCommandFilter");
         registrationBean.setOrder(1);

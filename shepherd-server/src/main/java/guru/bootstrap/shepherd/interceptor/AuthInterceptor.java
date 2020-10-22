@@ -43,7 +43,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         BaseCommand command = SpringContextUtil.getBaseCommand();
         LoginValidator loginValidator = handlerMethod.getMethod().getAnnotation(LoginValidator.class);
         if (loginValidator != null
-                && (!command.isLogin() || !validateLoginStatusToken(command, request))) {
+                && (command.isNotLogin() || !validateLoginStatusToken(command, request))) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(buildHttpResponse()));
@@ -51,6 +51,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         return true;
+    }
+
+    private boolean checkCsrfHeader(BaseCommand command, HttpServletRequest request) {
+        String csrfHeader = request.getHeader(AppConstant.X_CSRF_TOKEN_HEADER);
+        String csrfCookie = command.get_csrf_token();
+
+        return false;
     }
 
     private boolean validateLoginStatusToken(BaseCommand command, HttpServletRequest request) {
