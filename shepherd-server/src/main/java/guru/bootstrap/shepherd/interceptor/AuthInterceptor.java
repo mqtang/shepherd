@@ -8,6 +8,7 @@ import guru.bootstrap.shepherd.http.ResultStatus;
 import guru.bootstrap.shepherd.http.ResultStatusEnum;
 import guru.bootstrap.shepherd.util.AppConstant;
 import guru.bootstrap.shepherd.util.SpringContextUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private boolean validateLoginStatusToken(BaseCommand command, HttpServletRequest request) {
         String token = command.getLoginStatusToken();
+        // 已登录, 但缓存中无登录状态
+        if (StringUtils.isEmpty(token)) return false;
         HttpSession session = request.getSession();
         String statusToken = (String) session.getAttribute(AppConstant.LOGIN_STATUS_SESSION_ATTR);
         return token.equalsIgnoreCase(statusToken);
