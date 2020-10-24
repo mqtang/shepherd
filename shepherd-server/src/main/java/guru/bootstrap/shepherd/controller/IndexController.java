@@ -2,6 +2,8 @@ package guru.bootstrap.shepherd.controller;
 
 import guru.bootstrap.shepherd.annotation.LoginAccess;
 import guru.bootstrap.shepherd.curator.CuratorConnection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,8 +13,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author tangcheng
@@ -23,13 +23,19 @@ public class IndexController extends BaseController {
 
     private CuratorConnection curatorConnection;
 
+    @Autowired
+    private Environment environment;
+
     @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Object testHandler(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
         session.setAttribute("name", "tang_cheng");
         session.setAttribute("age", 25);
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:sss").format(new Date());
+        String age =
+                environment.getProperty("spring.age", "default");
+//        return new SimpleDateFormat("yyyy-MM-dd hh:mm:sss").format(new Date());
+        return age;
     }
 
     @LoginAccess
