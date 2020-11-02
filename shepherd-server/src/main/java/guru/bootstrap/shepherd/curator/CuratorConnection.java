@@ -32,19 +32,19 @@ public class CuratorConnection {
                 .retryPolicy(retryPolicy)
                 .sessionTimeoutMs(60 * 1000)
                 .connectionTimeoutMs(3 * 1000)
-                .namespace("apple-3")
-                .aclProvider(new ACLProvider() {
-                    @Override
-                    public List<ACL> getDefaultAcl() {
-                        return ZooDefs.Ids.CREATOR_ALL_ACL;
-                    }
-
-                    @Override
-                    public List<ACL> getAclForPath(String path) {
-                        return ZooDefs.Ids.CREATOR_ALL_ACL;
-                    }
-                })
-                .authorization("digest", "root:root1995".getBytes())
+//                .namespace("apple-3")
+//                .aclProvider(new ACLProvider() {
+//                    @Override
+//                    public List<ACL> getDefaultAcl() {
+//                        return ZooDefs.Ids.CREATOR_ALL_ACL;
+//                    }
+//
+//                    @Override
+//                    public List<ACL> getAclForPath(String path) {
+//                        return ZooDefs.Ids.CREATOR_ALL_ACL;
+//                    }
+//                })
+//                .authorization("digest", "root:root1995".getBytes())
                 .build();
         curator.start();
     }
